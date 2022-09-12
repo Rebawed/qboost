@@ -72,7 +72,7 @@ def get_handwritten_digits_data(class1, class2):
         y (array of shape (n_samples,):
             Class labels with values of +/- 1.
     """
-    
+
     Xall, yall = load_digits(return_X_y=True)
 
     def extract_two_classes(c1, c2):

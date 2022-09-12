@@ -1,0 +1,35 @@
+# sudo apt-get update
+# sudo apt-get install ffmpeg libsm6 libxext6  -y
+
+import numpy as np
+
+import cv2
+import os
+import csv 
+import matplotlib.pyplot as plt
+
+train_dir = "ctrain"  # Directory della cartella del dataset di training
+training_dataset = []
+with open(os.path.join(train_dir,"_classes.csv"), newline="\n") as csvfile:
+    reader = csv.reader(csvfile,delimiter=",")
+    for row in reader:
+        training_dataset.append((row[0], row[1]))  # 0 se è maggiorenne, 1 se è minorenne
+
+
+#inizializzazione orb detector
+des_list=[]
+orb = cv2.ORB_create()
+
+#creazione lista di immmagini
+train_list = []
+kp = []
+feature_lista = []
+path = 'kioto'
+dirs = os.listdir(path)
+for file in dirs:
+    train_list.append(cv2.imread(os.sep + 'workspace' + os.sep + 'qboost' + os.sep + 'kioto' + os.sep + file))
+#trovo i keypoint all'interno delle immagini
+    kp = orb.detect(train_list,None)
+    kp, des_list = orb.compute(train_list,kp)
+    
+feature_lista.append(cv2.drawKeypoints(train_list,kp,None, color=(0,255,0), flags=0))

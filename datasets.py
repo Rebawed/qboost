@@ -20,7 +20,6 @@ from sklearn.datasets import load_digits
 
 def make_blob_data(n_samples=100, n_features=5, n_informative=2, delta=1):
     """Generate sample data based on isotropic Gaussians with a specified number of class-informative features.
-
     Args:
         n_samples (int):
             Number of samples.
@@ -32,7 +31,6 @@ def make_blob_data(n_samples=100, n_features=5, n_informative=2, delta=1):
             Difference in mean values of the informative features
             between the two classes.  (Note that all features have a
             standard deviation of 1).
-
     Returns:
         X (array of shape (n_samples, n_features))
             Feature vectors.
@@ -59,20 +57,18 @@ def make_blob_data(n_samples=100, n_features=5, n_informative=2, delta=1):
 
 def get_handwritten_digits_data(class1, class2):
     """Retrieve handwritten digits data for two of the classes (digits).
-
     Args:
         class1 (int):
            First class label (digit) to include.  Between 0 and 9.
         class2 (int):
            Second class label (digit) to include.  Between 0 and 9.
-
     Returns:
         X (array of shape (n_samples, n_features))
             Feature vectors.
         y (array of shape (n_samples,):
             Class labels with values of +/- 1.
     """
-
+    
     Xall, yall = load_digits(return_X_y=True)
 
     def extract_two_classes(c1, c2):

@@ -24,7 +24,6 @@ except ImportError:
 
 from qboost import QBoostClassifier, qboost_lambda_sweep
 from datasets import make_blob_data, get_handwritten_digits_data
-from mio_dataset import 
 
 
 if __name__ == '__main__':

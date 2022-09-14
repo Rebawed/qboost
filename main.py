@@ -1,15 +1,14 @@
-# sudo apt-get update
-# sudo apt-get install ffmpeg libsm6 libxext6  -y
-
-import numpy as np
-import pandas as pd
+import numpy as np                                                                                    # sudo apt-get update
+import pandas as pd                                                                                   # sudo apt-get install ffmpeg libsm6 libxext6  -y
 import cv2
 import os
-import csv 
+import csv
+from sys import exit 
+from matplotlib import pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from qboost import QBoostClassifier
 
-label_dir = "train"  #Labels directory
+label_dir = "etichette"  #Labels directory
 labels = []
 with open(os.path.join(label_dir,"_classes.csv"), newline="\n") as csvfile:
     reader = csv.reader(csvfile,delimiter=",")
@@ -34,10 +33,13 @@ for file in dirs:
     im=cv2.imread(os.sep + 'workspace' + os.sep + 'qboost' + os.sep + 'train' + os.sep + file)
     kp = orb.detect(im,None)
     keypoints, descriptor = orb.compute(im,kp)
+    img=cv2.drawKeypoints(im,kp,None,(0,255,0),flags=0)
+    plt.imshow(img)
+    plt.show()
     des_list.append((file,descriptor))
 descriptors=des_list[0][1]
 for path,descriptor in des_list[1:]:
-    descriptors=np.vstack((descriptors,descriptor))
+    descriptors=np.concatenate((descriptors,descriptor),axis=0)
 descriptors.shape
 descriptors_float=descriptors.astype(float)
 
@@ -46,12 +48,14 @@ from scipy.cluster.vq import kmeans,vq
 features = pd.DataFrame.from_records(descriptors_float)
 k=200
 voc,variance=kmeans(descriptors_float,k,1)
+
 #Histogram of training image
 im_features=np.zeros((len(dirs),k),"float32")
 for i in range(len(dirs)):
     words,distance=vq(des_list[i][1],voc)
     for w in words:
         im_features[i][w]+=1
+
 #Standardisation of training feature
 stdslr=StandardScaler().fit(im_features)
 im_features=stdslr.transform(im_features)
@@ -62,7 +66,3 @@ y=result
 lam=0.01
 clf=QBoostClassifier(X,y,lam,None,None)
 clf.fit(im_features,np.array(y))
-
-
-# np.flatten(features.values)
-#features['Id'] = descriptors

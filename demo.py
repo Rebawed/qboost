@@ -97,6 +97,8 @@ if __name__ == '__main__':
         X, y = get_handwritten_digits_data(args.digit1, args.digit2)
         n_features = np.size(X, 1)
 
+        print(X[0][0])
+
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.4)
         print('Number of features:', np.size(X, 1))

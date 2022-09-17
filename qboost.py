@@ -25,14 +25,12 @@ from tabulate import tabulate
 
 class DecisionStumpClassifier:
     """Decision tree classifier that operates on a single feature with a single splitting rule.
-
     The index of the feature used in the decision rule is stored
     relative to the original data frame.
     """
 
     def __init__(self, X, y, feature_index):
         """Initialize and fit the classifier.
-
         Args:
             X (array): 
                 2D array of feature vectors.  Note that the array
@@ -52,14 +50,12 @@ class DecisionStumpClassifier:
 
     def predict(self, X):
         """Predict class.
-
         Args:
             X (array):
                 2D array of feature vectors.  Note that the array
                 contains all features, while the weak classifier
                 itself will make a prediction based only a single
                 feature.
-
         Returns:
             Array of class labels.
         """
@@ -81,7 +77,6 @@ class EnsembleClassifier:
 
     def __init__(self, weak_classifiers, weights, weak_classifier_scaling, offset=1e-9):
         """Initialize ensemble from list of weak classifiers and weights.
-
         Args:
             weak_classifiers (list):
                 List of classifier instances.
@@ -102,7 +97,6 @@ class EnsembleClassifier:
 
     def predict(self, X):
         """Compute ensemble prediction.
-
         Note that this function returns the numerical value of the
         ensemble predictor, not the class label.  The predicted class
         is sign(predict()).
@@ -136,7 +130,6 @@ class EnsembleClassifier:
 
     def squared_error(self, X, y):
         """Compute squared error between predicted and true labels.
-
         Provided for testing purposes.
         """
         p = self.predict(X)
@@ -144,7 +137,6 @@ class EnsembleClassifier:
 
     def fit_offset(self, X):
         """Fit offset value based on class-balanced feature vectors.
-
         Currently, this assumes that the feature vectors in X
         correspond to an even split between both classes.
         """
@@ -177,7 +169,6 @@ class AllStumpsClassifier(EnsembleClassifier):
 
 def _build_bqm(H, y, lam):
     """Build BQM.
-
     Args:
         H (array):
             2D array of weak classifier predictions.  Each row is a
@@ -235,14 +226,11 @@ def _minimize_squared_loss_binary(H, y, lam):
 
 class QBoostClassifier(EnsembleClassifier):
     """Construct an ensemble classifier using quadratic loss minimization.
-
     """
 
     def __init__(self, X, y, lam, weak_clf_scale=None, drop_unused=True):
         """Initialize and fit QBoost classifier.
-
         X should already include all candidate features (e.g., interactions).
-
         Args:
             X (array):
                 2D array of feature vectors.
@@ -291,7 +279,6 @@ class QBoostClassifier(EnsembleClassifier):
 
     def report_baseline(self, X, y):
         """Report accuracy of weak classifiers.
-
         This provides context for interpreting the performance of the boosted
         classifier.
         """
@@ -306,7 +293,6 @@ class QBoostClassifier(EnsembleClassifier):
 
 def qboost_lambda_sweep(X, y, lambda_vals, val_fraction=0.4, verbose=False, **kwargs):
     """Run QBoost using a series of lambda values and check accuracy against a validation set.
-
     Args:
         X (array):
             2D array of feature vectors.
@@ -320,7 +306,6 @@ def qboost_lambda_sweep(X, y, lambda_vals, val_fraction=0.4, verbose=False, **kw
             Print out diagnostic information to screen.
         kwargs:
             Passed to QBoost.__init__.
-
     Returns:
         QBoostClassifier:
             QBoost instance with best validation score.

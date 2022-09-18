@@ -37,11 +37,13 @@ for values in y:
     result.append(values * 2 - 1)
 
 x_train, x_test, y_train, y_test = train_test_split(X, result, train_size=0.8, test_size=0.2, shuffle=True)#stratify=y
+#x_train=X
+#y_train=result
 print('Splitted Successfully')
 
-normalized_lambdas = np.linspace(0.0, 1.75, 10)
-n_features = np.size(X, 1)
-lambdas = normalized_lambdas / n_features
-lam = 0.1
+#normalized_lambdas = np.linspace(0.0, 1.75, 10)
+#n_features = np.size(X, 1)
+#lambdas = normalized_lambdas / n_features
 #print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
-qboost = QBoostClassifier (x_train, y_train, lam)
+lam = 0.1
+qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unused=True)

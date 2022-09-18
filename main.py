@@ -5,10 +5,10 @@ from skimage.io import imread
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
-#from classify.classificator import Classifier
 from sklearn.model_selection import train_test_split
-from configuration import *
 from qboost import qboost_lambda_sweep
+#from classify.classificator import Classifier
+#from configuration import *
 
 Categories=['Maggiorenne','Minorenne']
 flat_data_arr=[] #input array
@@ -47,36 +47,3 @@ n_features = np.size(X, 1)
 lambdas = normalized_lambdas / n_features
 print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
 qboost, lam = qboost_lambda_sweep(x_train, y_train, lambdas, verbose=True)
-
-#qboost = QBoostClassifier(n_estimators=NUM_WEAK_CLASSIFIERS, max_depth=TREE_DEPTH)
-#qboost.fit(X_train, y_train, emb_sampler, lmd=lmd, **DW_PARAMS)
-'''
-y_pred=classifier.predict(x_test)
-print("The predicted Data is :")
-print(y_pred)
-print("The actual data is:")
-print(np.array(y_test))
-print(f"The model is {accuracy_score(y_pred,y_test)*100}% accurate")
-
-from sklearn import svm
-from sklearn.model_selection import GridSearchCV
-param_grid={'C':[0.1,1,10,100],'gamma':[0.0001,0.001,0.1,1],'kernel':['rbf','poly']}
-svc=svm.SVC(probability=True)
-model=GridSearchCV(svc,param_grid)
-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.20,random_state=77,stratify=y)
-print('Splitted Successfully')
-model.fit(x_train,y_train)    
-print('The Model is trained well with the given images')
-model.best_params_ contains the best parameters obtained from GridSearchCV
-
-from qboost import QBoostClassifier
-dwave_sampler = DWaveSampler()
-emb_sampler = EmbeddingComposite(dwave_sampler)
-lmd = 0.04
-dwave_sampler = DWaveSampler(token=DEVtoken)
-emb_sampler = EmbeddingComposite(dwave_sampler)
-lmd = 0.5
-qboost = QBoostClassifier(n_estimators=NUM_WEAK_CLASSIFIERS, max_depth=TREE_DEPTH)
-qboost.fit(self.X_train, self.y_train, emb_sampler, lmd=lmd, **DW_PARAMS)
-
-'''

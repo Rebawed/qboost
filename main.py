@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from qboost import qboost_lambda_sweep
+from qboost import QBoostClassifier,qboost_lambda_sweep
 #from classify.classificator import Classifier
 #from configuration import *
 
@@ -30,13 +30,11 @@ df=pd.DataFrame(flat_data) #dataframe
 df['Target']=target
 X=df.iloc[:,:-1] #input data 
 y=df.iloc[:,-1] #output data
-
+X = X.to_numpy()
 y=pd.Series(y).values
 result = []
 for values in y:
     result.append(values * 2 - 1)
-print(result)
-X = X.to_numpy()
 
 x_train, x_test, y_train, y_test = train_test_split(X, result, train_size=0.8, test_size=0.2, shuffle=True)#stratify=y
 print('Splitted Successfully')
@@ -45,5 +43,6 @@ print('Splitted Successfully')
 normalized_lambdas = np.linspace(0.0, 1.75, 10)
 n_features = np.size(X, 1)
 lambdas = normalized_lambdas / n_features
+lmd = 0.5
 print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
-qboost, lam = qboost_lambda_sweep(x_train, y_train, lambdas, verbose=True)
+qboost = QBoostClassifier (x_train, y_train, lmd)

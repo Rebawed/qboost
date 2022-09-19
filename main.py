@@ -23,10 +23,6 @@ for i in Categories:
     for img in os.listdir(path):
         img_array=imread(os.path.join(path,img))
         imgGrayarray = color.rgb2gray(img_array)
-        '''
-        thresh = threshold_otsu(imgGrayarray)
-        binary = imgGrayarray > thresh
-        '''
         img_resized=resize(imgGrayarray,(150,150,3))
         flat_data_arr.append(img_resized.flatten())
         target_arr.append(Categories.index(i))
@@ -39,6 +35,7 @@ X=df.iloc[:,:-1] #input data
 y=df.iloc[:,-1] #output data
 X = X.to_numpy()
 y=pd.Series(y).values
+print(X)
 result = []
 for values in y:
     result.append(values * 2 - 1)
@@ -61,4 +58,8 @@ print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
 #lambdas = normalized_lambdas / n_features
 #print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
 #qboost, lam = qboost_lambda_sweep(x_train, y_train, lambdas, verbose=True)
+
+    thresh = threshold_otsu(imgGrayarray)
+    binary = imgGrayarray > thresh
+        
 '''

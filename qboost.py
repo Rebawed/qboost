@@ -108,7 +108,7 @@ class EnsembleClassifier:
         is sign(predict()).
         """
         H = _build_H(self.classifiers, X, self.weak_clf_scale)
-
+        
         # If we've already filtered out those with w=0 and we are only
         # using binary weights, this is just a sum
         preds = np.dot(H, self.w)
@@ -189,6 +189,7 @@ def _build_bqm(H, y, lam):
             (larger values encourage decreased model complexity).
     """
     n_samples = np.size(H, 0)
+    #n_classifiers = np.size(H, 1)
     n_classifiers = 3000
     
     # samples_factor is a factor that appears in front of the squared

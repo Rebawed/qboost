@@ -55,4 +55,4 @@ print('Splitted Successfully')
 
 lam = 0.4
 qboost= QBoostClassifier (X_train, y_train, lam, weak_clf_scale=None, drop_unused=True)
-
+report_baseline()

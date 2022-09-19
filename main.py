@@ -5,12 +5,21 @@ from skimage.io import imread
 from skimage import color,data
 #from skimage.filters import threshold_otsu
 from PIL import Image
+#import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
 from qboost import QBoostClassifier,qboost_lambda_sweep,EnsembleClassifier
+from sys import exit
 #from classify.classificator import Classifier
+
+'''
+        pca_184 = PCA(n_components=184)
+#        img_pca_184_recovered = pca_184.inverse_transform(img_pca_184_reduced)
+        img_array184 = img_pca_184_recovered[1,:].reshape([28,28])
+'''
 
 Categories=['Maggiorenne','Minorenne']
 flat_data_arr=[] #input array
@@ -22,20 +31,19 @@ for i in Categories:
     path=os.path.join(datadir,i)
     for img in os.listdir(path):
         img_array=imread(os.path.join(path,img))
-        imgGrayarray = color.rgb2gray(img_array)
-        img_resized=resize(imgGrayarray,(150,150,3))
+        img_resized=resize(img_array,(150,150,3))
         flat_data_arr.append(img_resized.flatten())
         target_arr.append(Categories.index(i))
     print(f'loaded category:{i} successfully')
 flat_data=np.array(flat_data_arr)
 target=np.array(target_arr)
-df=pd.DataFrame(flat_data) #dataframe
-df['Target']=target
-X=df.iloc[:,:-1] #input data 
-y=df.iloc[:,-1] #output data
-X = X.to_numpy()
-y=pd.Series(y).values
-print(X)
+#df=pd.DataFrame(flat_data) #dataframe
+#df['Target']=target
+#X=df.iloc[:,:-1] #input data 
+#y=df.iloc[:,-1] #output data
+X = flat_data
+y = target
+#y=pd.Series(y).values
 result = []
 for values in y:
     result.append(values * 2 - 1)
@@ -45,21 +53,20 @@ print('Number of features:', np.size(X, 1))
 print('Number of training samples:', len(x_train))
 print('Number of test samples:', len(x_test))
 
-lam = 0.4
-
-qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unused=True)
-#qboost.report_baseline(x_test,y_test)
+normalized_lambdas = np.linspace(0.0, 1.75, 10)
+n_features = np.size(X, 1)
+lambdas = normalized_lambdas / n_features
+print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
+qboost, lam = qboost_lambda_sweep(x_train, y_train, lambdas, verbose=True)
+qboost.report_baseline(x_test,y_test)
 print('Number of selected features:',len(qboost.get_selected_features()))
 print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
 
 '''
-#normalized_lambdas = np.linspace(0.0, 1.75, 10)
-#n_features = np.size(X, 1)
-#lambdas = normalized_lambdas / n_features
-#print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
-#qboost, lam = qboost_lambda_sweep(x_train, y_train, lambdas, verbose=True)
-
-    thresh = threshold_otsu(imgGrayarray)
-    binary = imgGrayarray > thresh
-        
+lam = 0.4
+qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unused=True)
+qboost.report_baseline(x_test,y_test)
+print('Number of selected features:',len(qboost.get_selected_features()))
+print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
+  
 '''

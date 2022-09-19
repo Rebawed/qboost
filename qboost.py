@@ -189,8 +189,7 @@ def _build_bqm(H, y, lam):
             (larger values encourage decreased model complexity).
     """
     n_samples = np.size(H, 0)
-    #n_classifiers = np.size(H, 1)
-    n_classifiers = 3000
+    n_classifiers = np.size(H, 1)
     
     # samples_factor is a factor that appears in front of the squared
     # loss term in the objective.  In theory, it does not affect the
@@ -218,7 +217,6 @@ def _build_bqm(H, y, lam):
             # in a sum over all i,j.
             bqm.add_interaction(
                 i, j, 2.0 * samples_factor * np.dot(H[:, i], H[:, j]))
-        print(i)
     print("dopo")
     return bqm
 

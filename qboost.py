@@ -108,7 +108,7 @@ class EnsembleClassifier:
         is sign(predict()).
         """
         H = _build_H(self.classifiers, X, self.weak_clf_scale)
-        
+
         # If we've already filtered out those with w=0 and we are only
         # using binary weights, this is just a sum
         preds = np.dot(H, self.w)
@@ -189,8 +189,7 @@ def _build_bqm(H, y, lam):
             (larger values encourage decreased model complexity).
     """
     n_samples = np.size(H, 0)
-    #n_classifiers = np.size(H, 1)
-    n_classifiers=2
+    n_classifiers = 3000
     
     # samples_factor is a factor that appears in front of the squared
     # loss term in the objective.  In theory, it does not affect the
@@ -210,7 +209,7 @@ def _build_bqm(H, y, lam):
         # Eq. (12) of Neven et al. (2008), where i=j.
         bqm.add_variable(i, lam - 2.0 * samples_factor *
                          np.dot(H[:, i], y) + samples_factor * np.dot(H[:, i], H[:, i]))
-
+    print("prima del ciclo")
     for i in range(n_classifiers):
         for j in range(i+1, n_classifiers):
             # Relative to Eq. (12) from Neven et al. (2008), the
@@ -218,7 +217,8 @@ def _build_bqm(H, y, lam):
             # in a sum over all i,j.
             bqm.add_interaction(
                 i, j, 2.0 * samples_factor * np.dot(H[:, i], H[:, j]))
-    
+        print(i)
+    print("dopo")
     return bqm
 
 

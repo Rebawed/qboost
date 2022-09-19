@@ -9,9 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from qboost import QBoostClassifier,qboost_lambda_sweep
+from qboost import QBoostClassifier,qboost_lambda_sweep,EnsembleClassifier
 #from classify.classificator import Classifier
-#from configuration import *
 
 Categories=['Maggiorenne','Minorenne']
 flat_data_arr=[] #input array
@@ -49,14 +48,17 @@ print('Number of features:', np.size(X, 1))
 print('Number of training samples:', len(x_train))
 print('Number of test samples:', len(x_test))
 
+lam = 0.4
+
+qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unused=True)
+#qboost.report_baseline(x_test,y_test)
+print('Number of selected features:',len(qboost.get_selected_features()))
+print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
+
+'''
 #normalized_lambdas = np.linspace(0.0, 1.75, 10)
 #n_features = np.size(X, 1)
 #lambdas = normalized_lambdas / n_features
 #print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
 #qboost, lam = qboost_lambda_sweep(x_train, y_train, lambdas, verbose=True)
-
-lam = 0.4
-qboost= QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unused=True)
-qboost.report_baseline(x_test,y_test)
-print('Number of selected features:',len(qboost.get_selected_features()))
-print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
+'''

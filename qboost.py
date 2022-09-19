@@ -49,7 +49,7 @@ class DecisionStumpClassifier:
 
         self.clf = DecisionTreeClassifier(max_depth=1)
         self.clf.fit(X[:, [feature_index]], y)
-
+   
     def predict(self, X):
         """Predict class.
 
@@ -81,7 +81,7 @@ class EnsembleClassifier:
 
     def __init__(self, weak_classifiers, weights, weak_classifier_scaling, offset=1e-9):
         """Initialize ensemble from list of weak classifiers and weights.
-
+        
         Args:
             weak_classifiers (list):
                 List of classifier instances.
@@ -108,7 +108,7 @@ class EnsembleClassifier:
         is sign(predict()).
         """
         H = _build_H(self.classifiers, X, self.weak_clf_scale)
-
+        
         # If we've already filtered out those with w=0 and we are only
         # using binary weights, this is just a sum
         preds = np.dot(H, self.w)
@@ -190,6 +190,7 @@ def _build_bqm(H, y, lam):
     """
     n_samples = np.size(H, 0)
     n_classifiers = np.size(H, 1)
+    #n_classifiers = n_classifiers-67000
 
     # samples_factor is a factor that appears in front of the squared
     # loss term in the objective.  In theory, it does not affect the
@@ -212,12 +213,13 @@ def _build_bqm(H, y, lam):
 
     for i in range(n_classifiers):
         for j in range(i+1, n_classifiers):
+            print(n_classifiers)
             # Relative to Eq. (12) from Neven et al. (2008), the
             # factor of 2 appears here because each term appears twice
             # in a sum over all i,j.
             bqm.add_interaction(
                 i, j, 2.0 * samples_factor * np.dot(H[:, i], H[:, j]))
-
+    print("sonoqui3")
     return bqm
 
 
@@ -227,9 +229,10 @@ def _minimize_squared_loss_binary(H, y, lam):
 
     sampler = LeapHybridSampler()
     results = sampler.sample(bqm, label='Example - QBoost')
+    print("ho i risultati")
     weights = np.array(list(results.first.sample.values()))
     energy = results.first.energy
-
+    print("ho fatto tutto")
     return weights, energy
 
 
@@ -274,7 +277,7 @@ class QBoostClassifier(EnsembleClassifier):
         self.weak_scores = np.array([np.mean(np.sign(h) * y > 0) for h in H.T])
 
         weights, self.energy = _minimize_squared_loss_binary(H, y, lam)
-
+        print("ho fatto la funzione")
         # Store only the selected classifiers
         if drop_unused:
             weak_classifiers = [wclf for wclf, w in zip(
@@ -282,10 +285,10 @@ class QBoostClassifier(EnsembleClassifier):
             weights = weights[weights > 0]
         else:
             weak_classifiers = wclf_candidates
-
+        print("ho immagazzinato")
         super().__init__(weak_classifiers, weights, weak_clf_scale)
         self.fit_offset(X)
-
+        print("e ora ho fatto il fit")
         # Save candidates so we can provide a baseline accuracy report.
         self._wclf_candidates = wclf_candidates
 

@@ -6,7 +6,7 @@ imgpath = "C:\\Users\\marco\\Desktop\\Nuova cartella\\images"
 labelpath = "C:\\Users\\marco\\Desktop\\Nuova cartella\\labelTxt"
 
 maggiorpath = "Maggiorenne"
-minorpath = "Minorenne" # poi fai tu, settalo e runna sto pezzo di codice dovrebbe andare ciao mangio buon appetitooo
+minorpath = "Minorenne" 
 directory_label = os.listdir(labelpath)
 polys = []
 for elem in directory_label:

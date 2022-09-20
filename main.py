@@ -1,15 +1,15 @@
 import os                                   #sudo apt-get update -y
 import numpy as np                          #sudo apt-get install -y python3-skimage
 import pandas as pd                                                       
-from skimage.transform import resize
 from skimage.io import imread
-from skimage import color,data
-from sklearn.metrics import accuracy_score
+from skimage.transform import resize
 from sklearn.model_selection import train_test_split
-from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
-from qboost import QBoostClassifier,qboost_lambda_sweep,DecisionStumpClassifier
+from sklearn.decomposition import PCA
+from qboost import QBoostClassifier,qboost_lambda_sweep
+from sklearn.metrics import accuracy_score
 from sys import exit
+#from skimage import color,data
 #import matplotlib.pyplot as plt
 #from PIL import Image
 

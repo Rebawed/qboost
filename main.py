@@ -1,14 +1,14 @@
 import os                                   #sudo apt-get update -y
 import numpy as np                          #sudo apt-get install -y python3-skimage
-import pandas as pd                                                       
+import pandas as pd     
 from skimage.io import imread
 from skimage.transform import resize
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from qboost import QBoostClassifier,qboost_lambda_sweep
-from sklearn.metrics import accuracy_score,f1_score
-from sys import exit
+from sklearn.metrics import classification_report,precision_score,recall_score,f1_score,accuracy_score
+from sklearn.metrics import confusion_matrix,ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 #from skimage import color,data
 #from PIL import Image
@@ -30,13 +30,13 @@ for i in Categories:
 flat_data=np.array(flat_data_arr)
 target=np.array(target_arr)
 X = flat_data #array di features 2D
-y = target # etichette 0 e 1(Maggiorenne,Minorenne)
+y = target # 0 e 1 labels(Maggiorenne,Minorenne)
 result = []
-for values in y: #conversione bit -1,1
+for values in y: # -1,1 for qboost
     result.append(values * 2 - 1)
 
-#split dataset e applicazione di Principal Component Analysis
-x_train, x_test, y_train, y_test = train_test_split(X, result, train_size=0.8, test_size=0.2, random_state=0)#stratify=y
+#Split Dataset & Principal Component Analysis
+x_train, x_test, y_train, y_test = train_test_split(X, result, train_size=0.8, test_size=0.2, random_state=25)
 sc = StandardScaler()
 x_train = sc.fit_transform(x_train)
 x_test = sc.transform(x_test)
@@ -47,8 +47,8 @@ print('Number of features:', np.size(X, 1))
 print('Number of training samples:', len(x_train))
 print('Number of test samples:', len(x_test))
 
-#Classificazione con Qboost
-normalized_lambdas = np.linspace(0.0, 1.75, 5)
+#Qboost classifier with lambda_sweep
+normalized_lambdas = np.linspace(60, 150, 10)
 n_features = np.size(X, 1)
 lambdas = normalized_lambdas / n_features
 print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
@@ -57,37 +57,33 @@ qboost.report_baseline(x_test,y_test)
 print('Number of selected features:',len(qboost.get_selected_features()))
 print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
 
+#Report metrics
+y_pred=qboost.predict_class(x_train)
+#print("The predicted Data is :")
+#print(y_pred)
+#print("The actual data is:" )
+#print(np.array(y_train))
+print(f"Precision score :{precision_score(y_train, y_pred)*100}%")
+#print('Recall score %s' % {recall_score(y_train, y_pred)*100}%)
+#print('F1-score score %s' % {f1_score(y_train, y_pred)*100}%)
+#print('Accuracy score %s' % {accuracy_score(y_train, y_pred)*100}%)
 
-y_pred=qboost.predict(x_test)
-print("The predicted Data is :")
-print(y_pred)
-print("The actual data is:")
-print(np.array(y_test))
-#f1_score(y_test, y_pred, pos_label="Minorenne", average='binary')
-
-from sklearn.metrics import classification_report
-from sklearn.metrics import precision_score
-from sklearn.metrics import recall_score
-from sklearn.metrics import f1_score
-from sklearn.metrics import accuracy_score
-
-y_test_float = np.single(y_test)
-print(np.array(y_test_float))
-print('Precision score %s' % precision_score(y_test_float, y_pred))
-print('Recall score %s' % recall_score(y_test_float, y_pred))
-print('F1-score score %s' % f1_score(y_test_float, y_pred))
-print('Accuracy score %s' % accuracy_score(y_test_float, y_pred))
-
+cm=confusion_matrix(y_train,y_pred)
+print("Confusion matrix:")
+disp=ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=Categories)
+disp.plot()
+plt.show()
+'''
+print("\nClassification report:")
+print(classification_report(y_test,y_pred target_names=[Maggiorenne,Minorenne]))
+'''
 
 #print(f"The model is {accuracy_score(y_pred,y_test)*100}% accurate")
-
 '''
+#Qboost Classifier
 lam = 0.4
 qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unused=True)
 qboost.report_baseline(x_test,y_test)
 print('Number of selected features:',len(qboost.get_selected_features()))
 print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
-
-
-
 '''

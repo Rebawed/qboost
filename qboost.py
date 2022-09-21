@@ -209,7 +209,6 @@ def _build_bqm(H, y, lam):
         # Eq. (12) of Neven et al. (2008), where i=j.
         bqm.add_variable(i, lam - 2.0 * samples_factor *
                          np.dot(H[:, i], y) + samples_factor * np.dot(H[:, i], H[:, i]))
-
     for i in range(n_classifiers):
         for j in range(i+1, n_classifiers):
             # Relative to Eq. (12) from Neven et al. (2008), the

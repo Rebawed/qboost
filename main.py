@@ -7,12 +7,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from qboost import QBoostClassifier,qboost_lambda_sweep
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score,f1_score
 from sys import exit
+import matplotlib.pyplot as plt
 #from skimage import color,data
-#import matplotlib.pyplot as plt
 #from PIL import Image
 
+#caricamento dataset
 Categories=['Maggiorenne','Minorenne']
 flat_data_arr=[] #input array
 target_arr=[] #output array
@@ -28,38 +29,26 @@ for i in Categories:
     print(f'loaded category:{i} successfully')
 flat_data=np.array(flat_data_arr)
 target=np.array(target_arr)
-X = flat_data
-y = target
+X = flat_data #array di features 2D
+y = target # etichette 0 e 1(Maggiorenne,Minorenne)
 result = []
-for values in y:
+for values in y: #conversione bit -1,1
     result.append(values * 2 - 1)
 
+#split dataset e applicazione di Principal Component Analysis
 x_train, x_test, y_train, y_test = train_test_split(X, result, train_size=0.8, test_size=0.2, random_state=0)#stratify=y
 sc = StandardScaler()
 x_train = sc.fit_transform(x_train)
 x_test = sc.transform(x_test)
-pca = PCA(n_components=240)
+pca = PCA(n_components=150)
 x_train = pca.fit_transform(x_train)
 x_test = pca.transform(x_test)
 print('Number of features:', np.size(X, 1))
 print('Number of training samples:', len(x_train))
 print('Number of test samples:', len(x_test))
-lam = 0.4
-qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unused=True)
-qboost.report_baseline(x_test,y_test)
-print('Number of selected features:',len(qboost.get_selected_features()))
-print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
 
-y_pred=qboost.predict(x_test)
-print("The predicted Data is :")
-print(y_pred)
-print("The actual data is:")
-print(np.array(y_test))
-
-#print(f"The model is {accuracy_score(y_pred,y_test)*100}% accurate")
-
-'''
-normalized_lambdas = np.linspace(0.0, 1.75, 10)
+#Classificazione con Qboost
+normalized_lambdas = np.linspace(0.0, 1.75, 5)
 n_features = np.size(X, 1)
 lambdas = normalized_lambdas / n_features
 print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
@@ -67,4 +56,38 @@ qboost, lam = qboost_lambda_sweep(x_train, y_train, lambdas, verbose=True)
 qboost.report_baseline(x_test,y_test)
 print('Number of selected features:',len(qboost.get_selected_features()))
 print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
+
+
+y_pred=qboost.predict(x_test)
+print("The predicted Data is :")
+print(y_pred)
+print("The actual data is:")
+print(np.array(y_test))
+#f1_score(y_test, y_pred, pos_label="Minorenne", average='binary')
+
+from sklearn.metrics import classification_report
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score
+
+y_test_float = np.single(y_test)
+print(np.array(y_test_float))
+print('Precision score %s' % precision_score(y_test_float, y_pred))
+print('Recall score %s' % recall_score(y_test_float, y_pred))
+print('F1-score score %s' % f1_score(y_test_float, y_pred))
+print('Accuracy score %s' % accuracy_score(y_test_float, y_pred))
+
+
+#print(f"The model is {accuracy_score(y_pred,y_test)*100}% accurate")
+
+'''
+lam = 0.4
+qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unused=True)
+qboost.report_baseline(x_test,y_test)
+print('Number of selected features:',len(qboost.get_selected_features()))
+print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
+
+
+
 '''

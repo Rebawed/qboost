@@ -1,0 +1,29 @@
+1-----------------------
+loading... category : Documento
+loaded category:Documento successfully
+loading... category : Passaporto
+loaded category:Passaporto successfully
+Number of features: 67500
+Number of training samples: 1260
+Number of test samples: 315
+Performing cross-validation using 5 values of lambda, this make take several minutes...
+lambda  n_features score:
+0.0009  43         0.683 
+0.0012  32         0.677 
+0.0016  23         0.675 
+0.0019  14         0.696 
+0.0022  7          0.661 
+Accuracy of weak classifiers (score on test set):
+  count    min    mean    max    std
+-------  -----  ------  -----  -----
+    150  0.486   0.536  0.641  0.020
+Number of selected features: 14
+Score on test set: 0.676
+The predicted Data is :
+[-1. -1. -1. ...  1. -1. -1.]
+The actual data is:
+[-1 -1 -1 ...  1 -1 -1]
+Precision score 0.7492260061919505
+Recall score 0.7344461305007587
+F1-score score 0.7417624521072798
+Accuracy score 0.7325396825396825

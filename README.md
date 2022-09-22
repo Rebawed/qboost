@@ -91,7 +91,7 @@ actual and predicted targets.  A regularization term is also included to
 penalize complex models that include more weak classifiers.  The resulting
 optimization problem can be written as [1]:
 
-![Objective](images/objective.png)
+![Objective](saved/images/objective.png)
 
 where `s` is an index over training instances, `i` is an index over features,
 `h_i(x_s)` denote the weak classifiers, `y_s` denote the observed targets, `w_i`

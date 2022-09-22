@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 Categories=['Maggiorenne','Minorenne']
 flat_data_arr=[] #input array
 target_arr=[] #output array
-datadir='trainf' #path di training
+datadir='littletrain' #path di training
 for i in Categories:
     print(f'loading... category : {i}')
     path=os.path.join(datadir,i)
@@ -67,7 +67,7 @@ print('F1-score score %s' % f1_score(y_train, y_pred))
 print('Accuracy score %s' % accuracy_score(y_train, y_pred))
 
 print("\nClassification report:")
-print(classification_report(y_test,y_pred, target_names=[Maggiorenne,Minorenne]))
+print(classification_report(y_train,y_pred, target_names=Categories))
 
 '''
 #Qboost Classifier

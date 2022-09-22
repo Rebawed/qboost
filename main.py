@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 #from PIL import Image
 
 #caricamento dataset
-Categories=['Documento','Passaporto']
+Categories=['Maggiorenne','Minorenne']
 flat_data_arr=[] #input array
 target_arr=[] #output array
-datadir='aletrain' #path di training
+datadir='littletrain' #path di training
 for i in Categories:
     print(f'loading... category : {i}')
     path=os.path.join(datadir,i)
@@ -68,6 +68,9 @@ print('Recall score %s' % recall_score(y_train, y_pred))
 print('F1-score score %s' % f1_score(y_train, y_pred))
 print('Accuracy score %s' % accuracy_score(y_train, y_pred))
 
+print("\nClassification report:")
+print(classification_report(y_test,y_pred, target_names=[Maggiorenne,Minorenne]))
+
 '''
 #Qboost Classifier
 lam = 0.4
@@ -75,13 +78,4 @@ qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unus
 qboost.report_baseline(x_test,y_test)
 print('Number of selected features:',len(qboost.get_selected_features()))
 print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
-
-cm=confusion_matrix(y_train,y_pred)
-print("Confusion matrix:")
-disp=ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=Categories)
-disp.plot()
-plt.show()
-
-print("\nClassification report:")
-print(classification_report(y_test,y_pred target_names=[Maggiorenne,Minorenne]))
 '''

@@ -4,9 +4,8 @@ import shutil
 
 imgpath = "C:\\Users\\marco\\Desktop\\estrazionee\\images"
 labelpath = "C:\\Users\\marco\\Desktop\\estrazionee\\labels"
-
-maggiorpath = "C:\\Users\\marco\\Desktop\\estrazionee\\Documento"
-minorpath = "C:\\Users\\marco\\Desktop\\estrazionee\\Passaporto"
+maggiorpath = "C:\\Users\\marco\\Desktop\\estrazionee\\Maggiorenne"
+minorpath = "C:\\Users\\marco\\Desktop\\estrazionee\\Minorenne"
 directory_label = os.listdir(labelpath)
 
 for elem in directory_label:

@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 #from PIL import Image
 
 #caricamento dataset
-Categories=['Maggiorenne','Minorenne']
+Categories=['Documento','Passaporto']
 flat_data_arr=[] #input array
 target_arr=[] #output array
-datadir='littletrain' #path di training
+datadir='train' #path di training
 for i in Categories:
     print(f'loading... category : {i}')
     path=os.path.join(datadir,i)
@@ -36,7 +36,7 @@ for values in y: # -1,1 for qboost
     result.append(values * 2 - 1)
 
 #Split Dataset & Principal Component Analysis
-x_train, x_test, y_train, y_test = train_test_split(X, result, train_size=0.8, test_size=0.2, random_state=25)
+x_train, x_test, y_train, y_test = train_test_split(X, result, train_size=0.8, test_size=0.2, random_state=0)
 sc = StandardScaler()
 x_train = sc.fit_transform(x_train)
 x_test = sc.transform(x_test)
@@ -48,7 +48,7 @@ print('Number of training samples:', len(x_train))
 print('Number of test samples:', len(x_test))
 
 #Qboost classifier with lambda_sweep
-normalized_lambdas = np.linspace(60, 150, 10)
+normalized_lambdas = np.linspace(60, 150, 5)
 n_features = np.size(X, 1)
 lambdas = normalized_lambdas / n_features
 print('Performing cross-validation using {} values of lambda, this make take several minutes...'.format(len(lambdas)))
@@ -59,26 +59,15 @@ print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
 
 #Report metrics
 y_pred=qboost.predict_class(x_train)
-#print("The predicted Data is :")
-#print(y_pred)
-#print("The actual data is:" )
-#print(np.array(y_train))
-print(f"Precision score :{precision_score(y_train, y_pred)*100}%")
-#print('Recall score %s' % {recall_score(y_train, y_pred)*100}%)
-#print('F1-score score %s' % {f1_score(y_train, y_pred)*100}%)
-#print('Accuracy score %s' % {accuracy_score(y_train, y_pred)*100}%)
+print("The predicted Data is :")
+print(y_pred)
+print("The actual data is:" )
+print(np.array(y_train))
+print('Precision score %s' % precision_score(y_train, y_pred))
+print('Recall score %s' % recall_score(y_train, y_pred))
+print('F1-score score %s' % f1_score(y_train, y_pred))
+print('Accuracy score %s' % accuracy_score(y_train, y_pred))
 
-cm=confusion_matrix(y_train,y_pred)
-print("Confusion matrix:")
-disp=ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=Categories)
-disp.plot()
-plt.show()
-'''
-print("\nClassification report:")
-print(classification_report(y_test,y_pred target_names=[Maggiorenne,Minorenne]))
-'''
-
-#print(f"The model is {accuracy_score(y_pred,y_test)*100}% accurate")
 '''
 #Qboost Classifier
 lam = 0.4
@@ -86,4 +75,13 @@ qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unus
 qboost.report_baseline(x_test,y_test)
 print('Number of selected features:',len(qboost.get_selected_features()))
 print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
+
+cm=confusion_matrix(y_train,y_pred)
+print("Confusion matrix:")
+disp=ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=Categories)
+disp.plot()
+plt.show()
+
+print("\nClassification report:")
+print(classification_report(y_test,y_pred target_names=[Maggiorenne,Minorenne]))
 '''

@@ -11,11 +11,11 @@ from sklearn.metrics import classification_report,precision_score,recall_score,f
 from sklearn.metrics import confusion_matrix,ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
-#caricamento dataset
+#Dataset loading
 Categories=['Maggiorenne','Minorenne']
 flat_data_arr=[] #input array
 target_arr=[] #output array
-datadir='littletrain' #path di training
+datadir='train' #training path
 for i in Categories:
     print(f'loading... category : {i}')
     path=os.path.join(datadir,i)
@@ -58,9 +58,9 @@ print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
 #Report metrics
 y_pred=qboost.predict_class(x_train)
 print("The predicted Data is :")
-print(y_pred)
+#print(y_pred)
 print("The actual data is:" )
-print(np.array(y_train))
+#print(np.array(y_train))
 print('Precision score %s' % precision_score(y_train, y_pred))
 print('Recall score %s' % recall_score(y_train, y_pred))
 print('F1-score score %s' % f1_score(y_train, y_pred))

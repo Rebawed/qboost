@@ -10,14 +10,12 @@ from qboost import QBoostClassifier,qboost_lambda_sweep
 from sklearn.metrics import classification_report,precision_score,recall_score,f1_score,accuracy_score
 from sklearn.metrics import confusion_matrix,ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
-#from skimage import color,data
-#from PIL import Image
 
 #caricamento dataset
 Categories=['Maggiorenne','Minorenne']
 flat_data_arr=[] #input array
 target_arr=[] #output array
-datadir='littletrain' #path di training
+datadir='trainf' #path di training
 for i in Categories:
     print(f'loading... category : {i}')
     path=os.path.join(datadir,i)

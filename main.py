@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 #from PIL import Image
 
 #caricamento dataset
-Categories=['Documento','Passaporto']
+Categories=['Maggiorenne','Minorenne']
 flat_data_arr=[] #input array
 target_arr=[] #output array
-datadir='train' #path di training
+datadir='littletrain' #path di training
 for i in Categories:
     print(f'loading... category : {i}')
     path=os.path.join(datadir,i)

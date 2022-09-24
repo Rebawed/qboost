@@ -7,9 +7,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from qboost import QBoostClassifier,qboost_lambda_sweep
-from sklearn.metrics import classification_report,precision_score,recall_score,f1_score,accuracy_score
-from sklearn.metrics import confusion_matrix,ConfusionMatrixDisplay
-import matplotlib.pyplot as plt
+from sklearn.metrics import classification_report
+from sklearn.metrics import precision_score,recall_score,f1_score,accuracy_score
 
 #Dataset loading
 Categories=['Maggiorenne','Minorenne']
@@ -56,24 +55,14 @@ print('Number of selected features:',len(qboost.get_selected_features()))
 print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
 
 #Report metrics
-y_pred=qboost.predict_class(x_train)
+y_pred=qboost.predict_class(x_test)
 print("The predicted Data is :")
-#print(y_pred)
+print(y_pred)
 print("The actual data is:" )
-#print(np.array(y_train))
-print('Precision score %s' % precision_score(y_train, y_pred))
-print('Recall score %s' % recall_score(y_train, y_pred))
-print('F1-score score %s' % f1_score(y_train, y_pred))
-print('Accuracy score %s' % accuracy_score(y_train, y_pred))
-
+print(np.array(y_test))
+print('Precision score %s' % precision_score(y_test, y_pred))
+print('Recall score %s' % recall_score(y_test, y_pred))
+print('F1-score score %s' % f1_score(y_test, y_pred))
+print('Accuracy score %s' % accuracy_score(y_test, y_pred))
 print("\nClassification report:")
 print(classification_report(y_train,y_pred, target_names=Categories))
-
-'''
-#Qboost Classifier
-lam = 0.4
-qboost = QBoostClassifier (x_train, y_train, lam, weak_clf_scale=None, drop_unused=True)
-qboost.report_baseline(x_test,y_test)
-print('Number of selected features:',len(qboost.get_selected_features()))
-print('Score on test set: {:.3f}'.format(qboost.score(x_test, y_test)))
-'''
